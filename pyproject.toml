@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "playlist_coloc"
+version = "0.1.0"
+description = "Deezer playlist comparator"
+authors = ["jdectot <juju.dectot@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+deezer-python = "^7.2.0"
+
+[poetry.group.dev.dependencies]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
