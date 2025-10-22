@@ -1,3 +1,3 @@
 /.idea/
-/poetry.lock
-/.env
+/python_scripts/poetry.lock
+/python_scripts/.env
