@@ -1,5 +1,5 @@
-from utils import get_env_var
-from prepare_playlists import PreparePlaylists
+from python_scripts import get_env_var
+from python_scripts import PreparePlaylists
 
 playlist_id = get_env_var("PLAYLIST_ID")
 
