@@ -1,36 +1,87 @@
 import time
 import deezer
+import pandas as pd
 
-
-def fetch_deezer_playlist(playlist_id: int)-> list[dict]:
+def fetch_deezer_playlist(playlist_id: int, playlist_name: str)-> list[list[str]]:
     """
     Fetch Deezer playlist tracks and their details.
     :param playlist_id:
-    :return:
+    :return:[{track_id: [genra1, genra2,...]},...]
     """
 
     client = deezer.Client()
-    list_tracks = []
+    tracks_df = pd.DataFrame(columns=["track_id", "playlist_name", "artist", "album", "release_year", "genras","related_artists"])
 
     try:
         playlists = client.get_playlist(playlist_id)
     except Exception as e:
         print(f"Error fetching playlist {playlist_id}: {e}")
-        return list_tracks
-
+        return tracks_df
 
     for track in playlists.tracks:
         try :
             track_album = track.get_album()
+            track_artist = track.get_artist()
+            similar_artists = track_artist.get_related()
             genras = track_album.genres
             genras_name = [genre.name for genre in genras]
-            new_track = {track.id:genras_name}
-            list_tracks.append(new_track)
+            tracks_df = pd.concat([tracks_df, pd.DataFrame([{
+                "track_id": track.id,
+                "playlist_name": playlist_name,
+                "artist": track_artist.name,
+                "album": track_album.title,
+                "release_year": track_album.release_date,
+                "genras": genras_name,
+                "related_artists": [artist.name for artist in similar_artists]
+            }])], ignore_index=True)
+
         except :
             time.sleep(3)
+            try :
+                track_album = track.get_album()
+                track_artist = track.get_artist()
+                similar_artists = track_artist.get_related()
+                genras = track_album.genres
+                genras_name = [genre.name for genre in genras]
+                tracks_df = pd.concat([tracks_df, pd.DataFrame([{
+                    "track_id": track.id,
+                    "playlist_name": playlist_name,
+                    "artist": track_artist.name,
+                    "album": track_album.title,
+                    "release_year": track_album.release_date,
+                    "genras": genras_name,
+                    "related_artists": [artist.name for artist in similar_artists]
+                }])], ignore_index=True)
+            except :
+                pass
+    return tracks_df
+
+def fetch_deezer_track(track_name: str)-> pd.DataFrame:
+    """
+    Fetch Deezer track genras.
+    :param track name:
+    :return: df (
+    """
+
+    client = deezer.Client()
+    genras_name = []
+    try:
+        results = client.search(track_name)
+        print(results)
+        if results:
+            track = results[0]
             track_album = track.get_album()
-            genras = track_album.genres
-            genras_name = [genre.name for genre in genras]
-            new_track = {track.id: genras_name}
-            list_tracks.append(new_track)
-    return list_tracks
+            track_artist = track.get_artist()
+            similar_artists = track_artist.get_related()
+            pd.DataFrame([{
+                "track_id": track.id,
+                "artist": track_artist.name,
+                "album": track_album.title,
+                "release_year": track_album.release_date,
+                "genras": genras_name,
+                "related_artists": [artist.name for artist in similar_artists]}])
+    except Exception as e:
+        print(f"Error fetching track {track_name}: {e}")
+        return genras_name
+
+    return genras_name
