@@ -2,7 +2,7 @@ from sklearn.neighbors import KNeighborsClassifier
 import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from safe_mlb import SafeMLB
+from python_scripts.safe_mlb import SafeMLB
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from scipy import sparse
@@ -114,6 +114,10 @@ class KnnPlaylist:
             pickle.dump(self, f)
 
     @classmethod
-    def load_model(self, file_name: str) -> object:
-        with open(file_name, "rb") as f:
-            return pickle.load(f)
+    def load_model(cls,file_name: str) -> object:
+        try :
+            with open(file_name, "rb") as f:
+                return pickle.load(f)
+        except Exception as e:
+            print(f"Error loading model from {file_name}: {e}")
+            return None

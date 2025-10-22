@@ -1,6 +1,6 @@
-from prepare_playlists import PreparePlaylists
-from utils import get_env_var
-from knn import KnnPlaylist
+from python_scripts.prepare_playlists import PreparePlaylists
+from python_scripts.utils import get_env_var
+from python_scripts.knn import KnnPlaylist
 import numpy as np
 
 #get and process data

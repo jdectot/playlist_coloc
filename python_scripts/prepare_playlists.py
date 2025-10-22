@@ -1,5 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from deezer_api import fetch_deezer_playlist
+from .deezer_api import fetch_deezer_playlist
 import pandas as pd
 
 

@@ -1,6 +1,5 @@
 from sklearn.preprocessing import MultiLabelBinarizer
 import numpy as np
-import scipy.sparse as sp
 
 class SafeMLB(MultiLabelBinarizer):
     def transform(self, y):
