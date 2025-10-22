@@ -60,20 +60,22 @@ def fetch_deezer_track(track_name: str)-> pd.DataFrame:
     """
     Fetch Deezer track genras.
     :param track name:
-    :return: df (
+    :return: df
     """
 
+    df = pd.DataFrame(columns=["track_id", "artist", "album", "release_year", "genras", "related_artists"])
+
     client = deezer.Client()
-    genras_name = []
     try:
         results = client.search(track_name)
-        print(results)
         if results:
             track = results[0]
             track_album = track.get_album()
             track_artist = track.get_artist()
             similar_artists = track_artist.get_related()
-            pd.DataFrame([{
+            genras = track_album.genres
+            genras_name = [genre.name for genre in genras]
+            df = pd.DataFrame([{
                 "track_id": track.id,
                 "artist": track_artist.name,
                 "album": track_album.title,
@@ -82,6 +84,6 @@ def fetch_deezer_track(track_name: str)-> pd.DataFrame:
                 "related_artists": [artist.name for artist in similar_artists]}])
     except Exception as e:
         print(f"Error fetching track {track_name}: {e}")
-        return genras_name
+        return df
 
-    return genras_name
+    return df

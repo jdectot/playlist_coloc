@@ -9,14 +9,14 @@ def predict_playlist(track_name: str) -> str:
     :return: Character name
     """
 
-    track_genras = fetch_deezer_track(track_name)
-    genras = [g.replace(" ", "_") for g in track_genras]
-    genras = [" ".join(genras)]
+    df = fetch_deezer_track(track_name)
+    prepare_song = PreparePlaylists()
+    df = prepare_song.data_cleaning(df)
 
     knn_model = KnnPlaylist.load_model("knn_playlist_model.pickle")
 
 
-    prediction = knn_model.predict(genras)
+    prediction = knn_model.predict(df)
     return prediction[0]
 
-print(predict_playlist("Dancing Queen"))
+print(predict_playlist(""))
