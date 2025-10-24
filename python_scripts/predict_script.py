@@ -20,4 +20,4 @@ def predict_playlist(track_name: str) -> str:
 
 
     prediction = knn_model.predict(df)
-    return prediction[0]
+    return prediction

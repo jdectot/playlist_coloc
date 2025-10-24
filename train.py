@@ -16,7 +16,7 @@ df = prepare_playlists(playlists)
 
 # train model
 model = KnnPlaylist(k=2)
-accuracy = model.fit_predict(df)
+accuracy = model.fit_eval(df)
 
 if accuracy > 0.7:
     print(f"Model trained with accuracy: {accuracy}")

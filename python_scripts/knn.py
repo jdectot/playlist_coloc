@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 from scipy import sparse
 from sklearn.metrics import accuracy_score
+import numpy as np
 
 class KnnPlaylist:
     def __init__(self, k=5):
@@ -16,9 +17,11 @@ class KnnPlaylist:
         self.multilabel_artists = None
         self.scaler = None
         self.onehot_artist = None
+        self.normalizer = None
+        self.threshold = None
 
 
-    def vectorizer_train(self, df : pd.DataFrame) -> list[list[int]]:
+    def vectorizer_train(self, df : pd.DataFrame) -> tuple[any, any]:
         """
         Vectorize playlist data for training.
         Genres: TF-IDF , Similar Artists: MultiLabelBinarizer, Artist: OneHotEncoder, Release Year: StandardScaler
@@ -49,8 +52,9 @@ class KnnPlaylist:
 
         X = sparse.hstack([X_genras, X_sim_artists, X_artist, X_num_sparse])
 
-        print("Shape finale du vecteur :", X)
-        print("Type :", type(X))
+        self.normalizer = StandardScaler(with_mean=False)
+        X = self.normalizer.fit_transform(X)
+
         y = df["playlist_name"]
 
         return X,y
@@ -78,10 +82,11 @@ class KnnPlaylist:
         X_num_sparse = sparse.csr_matrix(X_numerical)
 
         X = sparse.hstack([X_genras, X_sim_artists,  X_artist, X_num_sparse])
+        X = self.normalizer.fit_transform(X)
 
         return X
 
-    def fit_predict(self, df: pd.DataFrame) -> float:
+    def fit_eval(self, df: pd.DataFrame) -> float:
         """
         Fit the KNN model and predict on test set to evaluate accuracy.
         :param df:
@@ -94,10 +99,15 @@ class KnnPlaylist:
 
         self.model = KNeighborsClassifier(n_neighbors=2, metric='cosine')
         self.model.fit(X_train, y_train)
+
+        distances, indices = self.model.kneighbors(X)
+        mean_distances = distances.mean(axis=1)
+        self.threshold = np.percentile(mean_distances, 97)
+
         y_pred = self.model.predict(X_test)
         return accuracy_score(y_test, y_pred)
 
-    def predict(self, X: list[str]) -> list[str]:
+    def predict(self, X: list[str]) -> str:
         """
         Predict the playlist name for the given song data.
         :param X:
@@ -106,7 +116,16 @@ class KnnPlaylist:
         X = self.vectorizer_pred(X)
         if self.model is None:
             raise Exception("Model has not been fitted yet.")
-        return self.model.predict(X)
+
+        prediction = self.model.predict(X)
+
+        distances, indices = self.model.kneighbors(X)
+        mean_distances = distances.mean()
+
+        if mean_distances > self.threshold:
+            return "unknown"
+        else :
+            return prediction[0]
 
 
     def save_model(self, file_name: str):
