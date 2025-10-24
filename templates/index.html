@@ -3,39 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Playlist Predictor</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
   <input id="song" type="text" value="Song Title">
-  <button onclick="send()">Envoyer</button>
+  <button id="send-song-btn" onclick="send()">Envoyer</button>
   <div id="result"></div> <!-- ajouté ici -->
-
-  <script>
-    async function send() {
-      const song = document.getElementById("song").value;
-      const resultDiv = document.getElementById("result");
-      resultDiv.innerText = "Analyse en cours...";
-
-      try {
-        const res = await fetch("/run", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ Musique: song })
-        });
-        const data = await res.json();
-
-        if (data.error) {
-          resultDiv.innerText = "❌ " + data.error;
-        } else {
-          resultDiv.innerText = "🎧 Cette musique correspond à : " + data.result;
-        }
-
-      } catch (error) {
-        console.error("Error:", error);
-        resultDiv.innerText = "Erreur lors de la requête.";
-      }
-    }
-  </script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
