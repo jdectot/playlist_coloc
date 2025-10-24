@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif;
+  font-family: 'Poppins', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif;
   background: linear-gradient(45deg, #ff6b9d, #ffa07a, #ffd93d, #6bcf7f, #4d9de0, #bb6bd9);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
@@ -55,7 +55,7 @@ body::after {
   50% { transform: translateY(-30px) scale(1.1); }
 }
 
-#song {
+#song-input {
   width: 100%;
   max-width: 450px;
   padding: 20px 30px;
@@ -74,7 +74,7 @@ body::after {
   text-align: center;
 }
 
-#song:focus {
+#song-input:focus {
   transform: scale(1.05) translateY(-5px);
   box-shadow: 
     0 10px 0 #ff69b4,
@@ -103,6 +103,27 @@ button {
   position: relative;
   z-index: 10;
 }
+
+#result-text{
+margin-top: 10px;
+  font-size: 40px;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+#prediction{
+  margin-top: 10px;
+  font-size: 24px;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+#result{
+margin-top: 10px;
+  font-size: 18px;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
 
 button:hover {
   transform: scale(1.1) translateY(-5px);
@@ -143,6 +164,10 @@ button:active {
   position: relative;
   z-index: 10;
   animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.invisible {
+  visibility: hidden;
 }
 
 @keyframes popIn {
