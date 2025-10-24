@@ -7,9 +7,12 @@
 </head>
 
 <body>
-  <input id="song" type="text" value="Song Title">
-  <button id="send-song-btn" onclick="send()">Envoyer</button>
-  <div id="result"></div> <!-- ajouté ici -->
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <input id="song-input" type="text" placeholder="Song Title">
+  <button id="send-song-btn">Envoyer</button>
+  <p id="result-text" class="invisible"> Cliquez sur le morceau à envoyer </p>
+  <div id="results"></div>
+  <div id="prediction"></div>
+  <button id="new-search-btn" class="invisible">Refaire une prediction</button>
 </body>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </html>
