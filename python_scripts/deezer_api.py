@@ -56,20 +56,38 @@ def fetch_deezer_playlist(playlist_id: int, playlist_name: str)-> list[list[str]
                 pass
     return tracks_df
 
-def fetch_deezer_track(track_name: str)-> pd.DataFrame:
+
+def  fetch_deezer_tracks_by_name(track_name: str)-> list[any]:
     """
-    Fetch Deezer track genras.
-    :param track name:
+    Fetch Deezer 5 firsts track by name to retreive tracks in front app. The user will select the right one.
+    :param track_name:
+    :return:
+    """
+    client = deezer.Client()
+    track_list = []
+    try:
+        results = client.search(track_name)
+        for track in results[:5]:
+            track_list.append((f"{track.get_artist().name} - {track.title}", track.id))
+        return track_list
+    except :
+        return track_list
+
+
+def fetch_deezer_track_df(track_id:int)-> pd.DataFrame:
+    """
+    Fetch Deezer track by id
+    :param track id
     :return: df
     """
 
-    df = pd.DataFrame(columns=["track_id", "artist", "album", "release_year", "genras", "related_artists"])
+    df = pd.DataFrame(columns=["track_id", "title", "artist", "album", "release_year", "genras", "related_artists"])
 
     client = deezer.Client()
     try:
-        results = client.search(track_name)
+        results = client.get_track(track_id)
         if results:
-            track = results[0]
+            track = results
             track_album = track.get_album()
             track_artist = track.get_artist()
             similar_artists = track_artist.get_related()
@@ -77,13 +95,15 @@ def fetch_deezer_track(track_name: str)-> pd.DataFrame:
             genras_name = [genre.name for genre in genras]
             df = pd.DataFrame([{
                 "track_id": track.id,
+                "title": track.title,
                 "artist": track_artist.name,
                 "album": track_album.title,
                 "release_year": track_album.release_date,
                 "genras": genras_name,
                 "related_artists": [artist.name for artist in similar_artists]}])
-    except Exception as e:
-        print(f"Error fetching track {track_name}: {e}")
+        return df
+    except :
+        print("Error fetching track")
         return df
 
-    return df
+
