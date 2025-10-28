@@ -7,12 +7,13 @@
 </head>
 
 <body>
-  <input id="song-input" type="text" placeholder="Song Title">
+  <input id="song-input" type="text" placeholder="Entrer une musique">
   <button id="send-song-btn">Envoyer</button>
-  <p id="result-text" class="invisible"> Cliquez sur le morceau à envoyer </p>
-  <div id="results"></div>
-  <div id="prediction"></div>
-  <button id="new-search-btn" class="invisible">Refaire une prediction</button>
+  <p id="result-text" class="invisible"> Cliquer sur le morceau correspondant</p>
+  <p id="prediction-text" class="invisible">Cette musique correspond à : </p>
+  <div id="prediction" class="invisible"></div>
+  <div id="results" class="invisible"></div>
+  <button id="new-search-btn" class="invisible">Tester une autre musique</button>
 </body>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </html>

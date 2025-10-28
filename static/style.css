@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 
+/* Body and background styles */
 body {
   font-family: 'Poppins', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif;
   background: linear-gradient(45deg, #ff6b9d, #ffa07a, #ffd93d, #6bcf7f, #4d9de0, #bb6bd9);
@@ -25,6 +26,7 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+/* Bubble animations */
 body::before,
 body::after {
   content: '';
@@ -55,6 +57,8 @@ body::after {
   50% { transform: translateY(-30px) scale(1.1); }
 }
 
+/* Container styles */
+
 #song-input {
   width: 100%;
   max-width: 450px;
@@ -84,7 +88,6 @@ body::after {
 }
 
 button {
-  margin-top: 30px;
   padding: 20px 50px;
   font-size: 20px;
   font-weight: 900;
@@ -104,26 +107,63 @@ button {
   z-index: 10;
 }
 
+#send-song-btn {
+  margin-top: 30px;
+}
+
+#new-search-btn {
+  margin-top: 50px;
+}
+
+/* Text display test styles */
 #result-text{
-margin-top: 10px;
   font-size: 40px;
   color: white;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   }
 
-#prediction{
-  margin-top: 10px;
-  font-size: 24px;
+/* Remove puce from list items */
+li {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* API result styles */
+#results {
+  margin-top: 20px;
+  padding: 25px 40px;
+  font-size: 20px;
+  text-align: center;
+  color : white;
+}
+
+
+#prediction-text{
+  font-size: 30px;
   color: white;
+  font-weight: bold;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   }
 
-#result{
-margin-top: 10px;
-  font-size: 18px;
-  color: white;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+
+#prediction{
+  margin-top: 20px;
+  padding: 20px 50px;
+  font-size: 20px;
+  font-weight: 900;
+  border: 5px solid #fff;
+  border-radius: 60px;
+  border-color
+  background : white
+  color: black;
+  box-shadow:
+    0 8px 0 #ff1493,
+    0 15px 40px rgba(255, 107, 157, 0.5);
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
   }
+
 
 button:hover {
   transform: scale(1.1) translateY(-5px);
@@ -140,44 +180,16 @@ button:active {
     0 10px 30px rgba(255, 107, 157, 0.5);
 }
 
-#result {
-  margin-top: 40px;
-  padding: 25px 40px;
-  font-size: 22px;
-  font-weight: bold;
-  border: 5px solid #fff;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #ff6b9d 0%, #bb6bd9 100%);
-  color: white;
-  min-height: 60px;
-  max-width: 500px;
-  text-align: center;
-  box-shadow: 
-    0 8px 0 #9b4dca,
-    0 15px 40px rgba(187, 107, 217, 0.5),
-    inset 0 2px 15px rgba(255, 255, 255, 0.3);
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 10;
-  animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
 
 .invisible {
-  visibility: hidden;
+  display : none;
+
 }
 
 @keyframes popIn {
   0% { transform: scale(0); opacity: 0; }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); opacity: 1; }
-}
-
-#result:empty {
-  display: none;
 }
 
 @keyframes bubble1 {

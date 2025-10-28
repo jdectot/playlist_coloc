@@ -2,10 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const sendButton = document.getElementById("send-song-btn");
   const songInput = document.getElementById("song-input");
   const resultsList = document.getElementById("results");
-  const resultDiv = document.getElementById("prediction");
+  const predictDiv = document.getElementById("prediction");
   const newSearchButton = document.getElementById("new-search-btn");
   const resultsText = document.getElementById("result-text");
+  const predictionText = document.getElementById("prediction-text");
 
+  /* ENTER A SONG */
 
   // Function to send song query and handle responses.
   // If no song is provided, return message.
@@ -13,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
    async function send() {
     const song = songInput.value.trim();
     if (!song) {
-        resultDiv.innerText = "Veuillez entrer le nom d'une chanson.";
+        predictDiv.innerText = "Veuillez entrer le nom d'une chanson.";
         return;
     }
 
@@ -35,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (data.error) {
-        resultDiv.innerText = "❌ " + data.error;
+        predictDiv.innerText = "❌ " + data.error;
         return;
       }
 
@@ -44,23 +46,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const tracks = data.result.slice(0, 5); // max 5 chansons
 
       if (tracks.length === 0) {
-        resultDiv.innerText = "Aucun résultat trouvé.";
+        predictDiv.innerText = "Aucun résultat trouvé.";
         return;
       }
 
 
-      // Création de la liste cliquable
+      /* PRINT RESULTS OF API REQUEST AND PREDICTION RESULT */
+
+
+
+      resultsList.classList.remove("invisible");
       newSearchButton.classList.remove("invisible");
+
+
       tracks.forEach(([track_name, track_id]) => {
         const li = document.createElement("li");
         li.textContent = track_name;
         li.style.cursor = "pointer";
 
+        // Click on a song to get prediction
         li.addEventListener("click", async () => {
-          // Affiche le texte de chargement pour la prédiction
+
           newSearchButton.classList.add("invisible");
           resultsList.classList.add("invisible");
-          resultDiv.innerText = "Analyse en cours...";
+
+          predictDiv.innerText = "Analyse en cours...";
 
           try {
             const predRes = await fetch("/predict_song", {
@@ -68,13 +78,18 @@ document.addEventListener("DOMContentLoaded", () => {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ id: track_id }),
             });
+
             newSearchButton.classList.remove("invisible");
             resultsText.classList.add("invisible");
+
             const predData = await predRes.json();
-            resultDiv.innerText = "🎧 Cette musique correspond à : " + predData.result;
+            predictDiv.innerText = "🎧 "+ predData.result;
+            predictDiv.classList.remove("invisible");
+            predictionText.classList.remove("invisible");
+
           } catch (error) {
             console.error("Error:", error);
-            resultDiv.innerText = "Erreur lors de la requête de prédiction.";
+            predictDiv.innerText = "Erreur lors de la requête de prédiction.";
           }
         });
 
@@ -82,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } catch (error) {
       console.error("Error:", error);
-      resultDiv.innerText = "Erreur lors de la requête de recherche.";
+      predictDiv.innerText = "Erreur lors de la requête de recherche.";
     }
 
   }
@@ -96,8 +111,9 @@ document.addEventListener("DOMContentLoaded", () => {
     newSearchButton.classList.add("invisible");
     resultsText.classList.add("invisible");
     resultsList.classList.add("invisible");
+    predictionText.classList.add("invisible");
     resultsList.innerHTML = "";
-    resultDiv.innerText = "";
+    predictDiv.innerText = "";
     songInput.value = "";
   }
 
