@@ -65,12 +65,18 @@ def  fetch_deezer_tracks_by_name(track_name: str)-> list[any]:
     """
     client = deezer.Client()
     track_list = []
+    results = []
     try:
         results = client.search(track_name)
+    except :
+        time.sleep(3)
+        results = client.search(track_name)
+    finally:
         for track in results[:5]:
             track_list.append((f"{track.get_artist().name} - {track.title}", track.id))
-        return track_list
-    except :
+
+        if track_list == []:
+            print("Aucun morceau trouvé")
         return track_list
 
 
@@ -101,9 +107,26 @@ def fetch_deezer_track_df(track_id:int)-> pd.DataFrame:
                 "release_year": track_album.release_date,
                 "genras": genras_name,
                 "related_artists": [artist.name for artist in similar_artists]}])
-        return df
     except :
-        print("Error fetching track")
-        return df
+        time.sleep(3)
+        results = client.get_track(track_id)
+        if results:
+            track = results
+            track_album = track.get_album()
+            track_artist = track.get_artist()
+            similar_artists = track_artist.get_related()
+            genras = track_album.genres
+            genras_name = [genre.name for genre in genras]
+            df = pd.DataFrame([{
+                "track_id": track.id,
+                "title": track.title,
+                "artist": track_artist.name,
+                "album": track_album.title,
+                "release_year": track_album.release_date,
+                "genras": genras_name,
+                "related_artists": [artist.name for artist in similar_artists]}])
+    if df.empty:
+        print("Nous n'avons pas pu récupérer les informations de ce morceau.")
+    return df
 
 
